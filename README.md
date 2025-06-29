@@ -136,16 +136,26 @@ Additional relationships:
    - Filters out DNFs (NULL final_classification)
    - Sorts by largest position gains for quick analysis
 
-2. **Indexes**:
+2. **driver_season_points view**:
+   - Aggregates each driver's total points per season, combining main and sprint race results
+   - Allows fast queries for championship summaries without duplicating join logic
+
+3. **Indexes**:
    - Created on frequently joined columns (race_id, driver_id)
    - Recommended for performance:
      - `idx_results_race` on results(race_id)
      - `idx_results_driver` on results(driver_id)
      - `idx_races_year` on races(year)
+     - `idx_sprint_race` on sprint_results(race_id)
+     - `idx_sprint_driver` on sprint_results(driver_id)
+     - `idx_results_constructor` on results(constructor_id)
+     - `idx_sprint_constructor` on sprint_results(constructor_id)
+     - `idx_drivers_nationality` on drivers(nationality)
+     - `idx_constructors_nationality` on constructors(nationality)
 
-3. **Data Cleaning**:
-   - Replaced '\N' placeholders with NULL in race times
-   - Generated missing driver codes from surnames
+4. **Data Cleaning**:
+   - Replaced '\N' placeholders with NULL in race time data to ensure compatibility with numeric operations and proper sorting.
+   - Some drivers were missing 3-letter code names in the original dataset. These were auto-generated from the driver’s last name.
 
 ## Limitations
 
@@ -168,3 +178,12 @@ Additional relationships:
    - Some time values may be incomplete
    - Driver codes are generated if missing
 
+## 📦 Data Source
+
+The data used in this project was sourced from Kaggle:
+
+**Formula 1 World Championship (1950–2020)**  
+🔗 [Kaggle Dataset by Rohan Rao](https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/discussion)
+
+This dataset includes historical information on circuits, drivers, constructors, races, results, and sprint outcomes.  
+This project is for educational and demonstrative purposes only. Data ownership and licensing remain with the original dataset authors and sources.
